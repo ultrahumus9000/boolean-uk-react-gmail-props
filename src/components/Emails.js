@@ -4,28 +4,28 @@ const getReadEmails = emails => emails.filter(email => !email.read)
 
 const getStarredEmails = emails => emails.filter(email => email.starred)
 
+const getSearchEmails = (emails, search) => {
+  return emails.filter(email => {
+    return ['sender', 'title'].some(key => {
+      return email[key].toLowerCase().includes(search.toLowerCase())
+    })
+  })
+}
+
 function Emails(props) {
   let filteredEmails = props.emails
-  console.log('filtered after line 12', filteredEmails)
 
   if (props.hideRead) filteredEmails = getReadEmails(filteredEmails)
-  console.log('filtered after line 15', filteredEmails)
 
   if (props.currentTab === 'starred')
     filteredEmails = getStarredEmails(filteredEmails)
-  console.log('filtered after line 19', filteredEmails)
 
   if (props.currentTab === 'inbox')
     filteredEmails = getReadEmails(filteredEmails)
-  console.log('filtered after line 23', filteredEmails)
 
   if (props.search !== '')
-    filteredEmails = filteredEmails.filter(email => {
-      return ['sender', 'title'].some(key => {
-        return email[key].toLowerCase().includes(props.search.toLowerCase())
-      })
-    })
-  console.log('filtered after line 31', filteredEmails)
+    filteredEmails = getSearchEmails(filteredEmails, props.search)
+  console.log('filtered after line 31', filteredEmails, props.search)
 
   return (
     <main className="emails">
